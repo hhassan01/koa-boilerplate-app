@@ -3,7 +3,7 @@ import { Context } from 'koa';
 import respond from './responses';
 import Issue from '../models/issue';
 
-const Issues = {
+const IssuesHandler = {
   get: async (context: Context): Promise<void> => {
     const issue = await Issue.findByPk(context.params.id);
     if (issue) {
@@ -14,8 +14,25 @@ const Issues = {
   },
 
   getAll: async (context: Context): Promise<void> => {
-    const issues = await Issue.findAll();
-    respond.success(context, { issues });
+    const page = parseInt(context.query.page as string, 10) || 1;
+    const pageSize = parseInt(context.query.pageSize as string, 10) || 10;
+
+    const offset = (page - 1) * pageSize;
+
+    const { count, rows: issues } = await Issue.findAndCountAll({
+      limit: pageSize,
+      offset,
+    });
+
+    respond.success(context, {
+      issues,
+      pagination: {
+        total: count,
+        page,
+        pageSize,
+        totalPages: Math.ceil(count / pageSize),
+      },
+    });
   },
 
   create: async (context: Context): Promise<void> => {
@@ -43,4 +60,4 @@ const Issues = {
   },
 };
 
-export default Issues;
+export default IssuesHandler;
