@@ -9,10 +9,8 @@ const Issues = {
     respond.success(context, { issue });
   },
   getAll: async (context: Context): Promise<void> => {
-    console.log("paring")
-    const issue = await Issue.findAll();
-    console.log({issue})
-    respond.success(context, { issue });
+    const issues = await Issue.findAll();
+    respond.success(context, { issues });
   }
 };
 
