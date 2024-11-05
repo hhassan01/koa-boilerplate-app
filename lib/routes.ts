@@ -8,7 +8,10 @@ const router = new Router();
 
 router.get('/', discovery);
 router.get('/health', health);
-router.get('/issues/:id', Issues.get);
+
 router.get('/issues', Issues.getAll);
+router.get('/issues/:id', Issues.get);
+router.post('/issues', Issues.create);
+router.put('/issues/:id', Issues.update);
 
 export default router;

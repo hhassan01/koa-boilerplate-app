@@ -33,18 +33,27 @@ Issue.init(
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: { args: [5, 100], msg: "Title must be between 5 and 100 characters" },
+      },
     },
     description: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: { msg: "Description cannot be empty" },
+        len: { args: [10, 255], msg: "Description must be between 10 and 255 characters" },
+      },
     },
     created_by: {
       type: DataTypes.STRING,
+      // @todo: Will be replaced with user's email once Auth is implemented
+      allowNull: false,
       defaultValue: 'unknown',
     },
     updated_by: {
       type: DataTypes.STRING,
-      defaultValue: 'unknown',
+      allowNull: true,
     },
   },
   {
