@@ -40,16 +40,21 @@ const IssuesHandler = {
 
   create: handleRequest(async (context: Context) => {
     const newIssue = await withTransaction(async (transaction) => {
-      const issue = await Issue.create(context.request.body as Issue, {
-        transaction,
-      });
+      const issue = await Issue.create(
+        {
+          ...(context.request.body as IssueCreationAttributes),
+          createdBy: context.state.user?.email,
+        },
+        {
+          transaction,
+        }
+      );
 
       await Revision.create(
         {
           issueId: issue.id,
           changes: { title: issue.title, description: issue.description },
-          // @todo: To be fixed after Auth with JWT
-          updatedBy: "unknown",
+          updatedBy: issue.createdBy,
           updatedAt: new Date(),
         },
         { transaction }
@@ -79,16 +84,20 @@ const IssuesHandler = {
         }
       });
 
-      // @todo: Add logic for updatedBy here after Authentication module
-      const updated = await issue.update(updatedData, { transaction });
+      const updated = await issue.update(
+        {
+          ...updatedData,
+          updatedBy: context.state.user?.email,
+        },
+        { transaction }
+      );
 
       if (Object.keys(changes).length > 0) {
         await Revision.create(
           {
             issueId: updated.id,
             changes,
-            // @todo: Add logic for updatedBy here after Authentication module
-            updatedBy: "unknown",
+            updatedBy: updated.updatedBy,
             updatedAt: new Date(),
           },
           { transaction }

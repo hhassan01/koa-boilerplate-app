@@ -1,6 +1,4 @@
 import dotenv from 'dotenv';
-// [@NOTE]: Dot env is set before local imports
-// to ensure that env variables are set for all local files
 const env = process.env.NODE_ENV || 'development';
 dotenv.config({ path: `.env.${env}` });
 
@@ -15,6 +13,7 @@ interface MySQLConfig {
 interface Config {
   port: number;
   mysql: MySQLConfig;
+  jwtSecret: string;
 }
 
 const config: Config = {
@@ -25,7 +24,8 @@ const config: Config = {
     password: process.env.DB_PASSWORD as string,
     database: process.env.DB_NAME as string,
     port: parseInt(process.env.DB_PORT as string, 10),
-  }
+  },
+  jwtSecret: process.env.JWT_SECRET as string,
 };
 
 export default config;

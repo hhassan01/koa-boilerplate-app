@@ -1,18 +1,23 @@
-import Router from 'koa-router';
+import Router from "koa-router";
 
-import discovery from './api/discovery';
-import health from './api/health';
-import IssuesHandler from './api/issues';
+import discovery from "./api/discovery";
+import health from "./api/health";
+import IssuesHandler from "./api/issues";
+import authenticate from "./middleware/authenticate";
+import AuthHandler from "./api/authenticate";
 
-const router = new Router();
+const publicRouter = new Router();
+const privateRouter = new Router();
 
-router.get('/', discovery);
-router.get('/health', health);
+publicRouter.get("/", discovery);
+publicRouter.get("/health", health);
+publicRouter.post("/auth/token", AuthHandler.getToken);
 
-router.get('/issues', IssuesHandler.getAll);
-router.get('/issues/:id', IssuesHandler.get);
-router.post('/issues', IssuesHandler.create);
-router.put('/issues/:id', IssuesHandler.update);
-router.get('/issues/:id/revisions', IssuesHandler.getRevisions);
+privateRouter.use(authenticate);
+privateRouter.get("/issues", IssuesHandler.getAll);
+privateRouter.get("/issues/:id", IssuesHandler.get);
+privateRouter.post("/issues", IssuesHandler.create);
+privateRouter.put("/issues/:id", IssuesHandler.update);
+privateRouter.get("/issues/:id/revisions", IssuesHandler.getRevisions);
 
-export default router;
+export { publicRouter, privateRouter };

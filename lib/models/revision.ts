@@ -48,9 +48,7 @@ Revision.init(
     },
     updatedBy: {
       type: DataTypes.STRING,
-      // @todo: Will be replaced with user's email once Auth is implemented
       allowNull: false,
-      defaultValue: "unknown",
       field: "updated_by",
     },
     updatedAt: {
