@@ -13,5 +13,6 @@ router.get('/issues', IssuesHandler.getAll);
 router.get('/issues/:id', IssuesHandler.get);
 router.post('/issues', IssuesHandler.create);
 router.put('/issues/:id', IssuesHandler.update);
+router.get('/issues/:id/revisions', IssuesHandler.getRevisions);
 
 export default router;
