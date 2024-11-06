@@ -1,7 +1,8 @@
-import { Context } from 'koa';
+import { Context } from "koa";
 
-import respond from './responses';
-import Issue from '../models/issue';
+import respond from "./responses";
+import Issue from "../models/issue";
+import { handleRequest } from "../utils/handleRequest";
 
 const IssuesHandler = {
   get: async (context: Context): Promise<void> => {
@@ -35,29 +36,21 @@ const IssuesHandler = {
     });
   },
 
-  create: async (context: Context): Promise<void> => {
-    try {
-      const newIssue = await Issue.create(context.request.body as Issue);
-      respond.success(context, { issue: newIssue }, 201);
-    } catch (error) {
-      respond.badRequest(context, error);
-    }
-  },
+  create: handleRequest(async (context: Context) => {
+    const newIssue = await Issue.create(context.request.body as Issue);
+    respond.success(context, { issue: newIssue }, 201);
+  }),
 
-  update: async (context: Context): Promise<void> => {
-    try {
-      const issue = await Issue.findByPk(context.params.id);
-      if (issue) {
-        // @todo: Add logic for updated_by here after Authentication module
-        const updatedIssue = await issue.update(context.request.body as Issue);
-        respond.success(context, { issue: updatedIssue });
-      } else {
-        respond.notFound(context);
-      }
-    } catch (error) {
-      respond.badRequest(context, error);
+  update: handleRequest(async (context: Context) => {
+    const issue = await Issue.findByPk(context.params.id);
+    if (issue) {
+      // @todo: Add logic for updated_by here after Authentication module
+      const updatedIssue = await issue.update(context.request.body as Issue);
+      respond.success(context, { issue: updatedIssue });
+    } else {
+      respond.notFound(context);
     }
-  },
+  }),
 };
 
 export default IssuesHandler;
