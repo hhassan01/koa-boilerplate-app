@@ -1,10 +1,5 @@
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
-import dotenv from 'dotenv';
-// [@NOTE]: Dot env is set before local imports
-// to ensure that env variables are set for all local files
-const env = process.env.NODE_ENV || 'development';
-dotenv.config({ path: `.env.${env}` });
 
 import config from './config';
 import router from './lib/routes';

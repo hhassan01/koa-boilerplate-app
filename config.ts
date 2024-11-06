@@ -1,3 +1,9 @@
+import dotenv from 'dotenv';
+// [@NOTE]: Dot env is set before local imports
+// to ensure that env variables are set for all local files
+const env = process.env.NODE_ENV || 'development';
+dotenv.config({ path: `.env.${env}` });
+
 interface MySQLConfig {
   host: string;
   user: string;
