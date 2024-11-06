@@ -19,5 +19,9 @@ privateRouter.get("/issues/:id", IssuesHandler.get);
 privateRouter.post("/issues", IssuesHandler.create);
 privateRouter.put("/issues/:id", IssuesHandler.update);
 privateRouter.get("/issues/:id/revisions", IssuesHandler.getRevisions);
+privateRouter.get(
+  "/issues/:issueId/revisions/compare/:revisionAId/:revisionBId",
+  IssuesHandler.compareRevisions
+);
 
 export { publicRouter, privateRouter };
