@@ -25,6 +25,7 @@ services:
       - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
       - DB_NAME=$MYSQLDB_DATABASE
       - DB_PORT=$MYSQLDB_DOCKER_PORT
+      - JWT_SECRET=$JWT_SECRET
 
 volumes: 
   db_data:
