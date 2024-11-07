@@ -111,7 +111,7 @@ During the development of this project, certain tradeoffs and design decisions w
 
 4. **Selective Package Use**: Packages were kept minimal to avoid unnecessary dependencies. For example, database migrations are managed with TypeScript files rather than sequelize-cli due to the simplicity of the migration needs.
 
-5. **Important Node on Error Handling**:  The project includes basic error handling for specific HTTP statuses, such as `400 Bad Request`. For example:
+5. **Important Note on Error Handling**:  The project includes basic error handling for specific HTTP statuses, such as `400 Bad Request`. For example:
 
 ```typescript
 badRequest: (context, errors): void => {
@@ -127,7 +127,7 @@ Currently, this handler provides detailed error information, which is helpful in
 
 #### Future Enhancements:
 
-1. **500 Internal Server Error**: A general `500 Internal Server Error` handler can be added to manage unexpected errors gracefully. This would ensure the user receives a generic error message without exposing details of the error.
+- **500 Internal Server Error**: A general `500 Internal Server Error` handler can be added to manage unexpected errors gracefully. This would ensure the user receives a generic error message without exposing details of the error.
 
    ```typescript
    internalServerError: (context, error): void => {
@@ -142,4 +142,4 @@ Currently, this handler provides detailed error information, which is helpful in
    }
    ```
 
-2. **Limited Error Details**: For production, limiting error exposure is recommended. Instead of returning the full error object (e.g., `errors`), the response could include only the `message` and `name` of the error, providing enough information for debugging without revealing sensitive details. This approach enhances security and keeps responses user-friendly.
+- **Limited Error Details**: For production, limiting error exposure is recommended. Instead of returning the full error object (e.g., `errors`), the response could include only the `message` and `name` of the error, providing enough information for debugging without revealing sensitive details. This approach enhances security and keeps responses user-friendly.
