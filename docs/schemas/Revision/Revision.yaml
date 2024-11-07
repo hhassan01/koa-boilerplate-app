@@ -1,0 +1,24 @@
+type: object
+properties:
+  id:
+    type: integer
+    description: Revision ID
+  issueId:
+    type: integer
+    description: ID of the associated issue
+  changes:
+    type: object
+    description: Changes made in this revision
+  updatedBy:
+    type: string
+    description: Email of the user who made the changes
+  updatedAt:
+    type: string
+    format: date-time
+    description: Timestamp when the revision was made
+required:
+  - id
+  - issueId
+  - changes
+  - updatedBy
+  - updatedAt

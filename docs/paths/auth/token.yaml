@@ -1,0 +1,30 @@
+post:
+  summary: Obtain authentication token
+  description: Generates a JWT token for authenticated access.
+  tags:
+    - Authentication
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/Auth/AuthTokenRequest.yaml'
+        example:
+          email: "user@example.com"
+  responses:
+    '200':
+      description: Token retrieved successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/Auth/AuthTokenResponse.yaml'
+        example:
+          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    '400':
+      description: Bad Request - Invalid or missing parameters
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/ErrorResponse.yaml'
+        example:
+          error: "Email should be provided"

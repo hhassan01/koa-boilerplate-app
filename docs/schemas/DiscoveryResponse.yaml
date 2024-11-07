@@ -1,0 +1,12 @@
+type: object
+properties:
+  message:
+    type: string
+    description: A welcome message or description of the API.
+  endpoints:
+    type: array
+    items:
+      type: string
+    description: List of available API endpoints.
+required:
+  - message

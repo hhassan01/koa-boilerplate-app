@@ -1,0 +1,33 @@
+get:
+  summary: Retrieve revisions for an issue
+  description: Returns a list of revisions for a specific issue.
+  tags:
+    - Revisions
+  parameters:
+    - in: path
+      name: issueId
+      required: true
+      schema:
+        type: integer
+      description: ID of the issue
+  security:
+    - BearerAuth: []
+  responses:
+    '200':
+      description: List of revisions retrieved successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/Revision/RevisionsList.yaml'
+    '404':
+      description: Issue not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/ErrorResponse.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/ErrorResponse.yaml'

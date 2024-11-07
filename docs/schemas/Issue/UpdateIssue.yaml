@@ -1,0 +1,8 @@
+type: object
+properties:
+  title:
+    type: string
+    description: Title of the issue
+  description:
+    type: string
+    description: Detailed description of the issue

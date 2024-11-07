@@ -1,0 +1,21 @@
+type: object
+properties:
+  before:
+    type: object
+    description: State of the issue before the changes
+  after:
+    type: object
+    description: State of the issue after the changes
+  changes:
+    type: object
+    description: Differences between the two revisions
+  revisions:
+    type: array
+    items:
+      $ref: './Revision.yaml'
+    description: List of revisions between the two points
+required:
+  - before
+  - after
+  - changes
+  - revisions

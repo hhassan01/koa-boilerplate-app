@@ -1,0 +1,6 @@
+type: object
+properties:
+  revisions:
+    type: array
+    items:
+      $ref: './Revision.yaml'

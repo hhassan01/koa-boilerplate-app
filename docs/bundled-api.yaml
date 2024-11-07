@@ -1,0 +1,477 @@
+openapi: 3.0.0
+info:
+  title: Issue Tracker API
+  version: 1.0.0
+  description: API documentation for the Issue Tracker
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /:
+    get:
+      summary: API Discovery Endpoint
+      description: Provides basic information about the API and available endpoints.
+      tags:
+        - General
+      responses:
+        '200':
+          description: API discovery information retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryResponse'
+  /health:
+    get:
+      summary: Health Check Endpoint
+      description: Checks the health status of the API.
+      tags:
+        - General
+      responses:
+        '200':
+          description: API is healthy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /auth/token:
+    post:
+      summary: Obtain authentication token
+      description: Generates a JWT token for authenticated access.
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthTokenRequest'
+            example:
+              email: user@example.com
+      responses:
+        '200':
+          description: Token retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokenResponse'
+            example:
+              token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          description: Bad Request - Invalid or missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            example:
+              error: Email should be provided
+  /issues:
+    get:
+      summary: Retrieve all issues
+      description: Retrieves a list of issues with pagination support.
+      tags:
+        - Issues
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number for pagination
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+          description: Number of items per page
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A list of issues with pagination details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issues:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Issue'
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of issues
+                      page:
+                        type: integer
+                        description: Current page number
+                      pageSize:
+                        type: integer
+                        description: Number of items per page
+                      totalPages:
+                        type: integer
+                        description: Total number of pages
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Create a new issue
+      description: Creates a new issue.
+      tags:
+        - Issues
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewIssue'
+            example:
+              title: Sample Issue
+              description: This is a sample issue.
+      responses:
+        '201':
+          description: Issue created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Issue'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/issues/{id}':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: ID of the issue
+    get:
+      summary: Retrieve a specific issue
+      description: Retrieves details of an issue by ID.
+      tags:
+        - Issues
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Issue details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Issue'
+        '401':
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Issue not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Update an existing issue
+      description: Updates details of an existing issue.
+      tags:
+        - Issues
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIssue'
+            example:
+              title: Updated Issue Title
+              description: Updated description.
+      responses:
+        '200':
+          description: Issue updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Issue'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Issue not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/issues/{issueId}/revisions':
+    get:
+      summary: Retrieve revisions for an issue
+      description: Returns a list of revisions for a specific issue.
+      tags:
+        - Revisions
+      parameters:
+        - in: path
+          name: issueId
+          required: true
+          schema:
+            type: integer
+          description: ID of the issue
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of revisions retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevisionsList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Issue not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/issues/{issueId}/revisions/compare/{revisionAId}/{revisionBId}':
+    get:
+      summary: Compare two revisions of an issue
+      description: Compares two revisions of an issue and returns the differences.
+      tags:
+        - Revisions
+      parameters:
+        - in: path
+          name: issueId
+          required: true
+          schema:
+            type: integer
+          description: ID of the issue
+        - in: path
+          name: revisionAId
+          required: true
+          schema:
+            type: integer
+          description: ID of the first revision
+        - in: path
+          name: revisionBId
+          required: true
+          schema:
+            type: integer
+          description: ID of the second revision
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Comparison result retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComparisonResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: One or both revisions not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Issue:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Issue ID
+        title:
+          type: string
+          description: Title of the issue
+        description:
+          type: string
+          description: Detailed description of the issue
+        createdBy:
+          type: string
+          description: Email of the user who created the issue
+        updatedBy:
+          type: string
+          description: Email of the user who last updated the issue
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the issue was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the issue was last updated
+      required:
+        - id
+        - title
+        - description
+        - createdBy
+        - createdAt
+    NewIssue:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the issue
+        description:
+          type: string
+          description: Detailed description of the issue
+      required:
+        - title
+        - description
+    UpdateIssue:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the issue
+        description:
+          type: string
+          description: Detailed description of the issue
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message detailing what went wrong
+      required:
+        - error
+    AuthTokenRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address
+      required:
+        - email
+    AuthTokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT token for authenticated access
+      required:
+        - token
+    Revision:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Revision ID
+        issueId:
+          type: integer
+          description: ID of the associated issue
+        changes:
+          type: object
+          description: Changes made in this revision
+        updatedBy:
+          type: string
+          description: Email of the user who made the changes
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the revision was made
+      required:
+        - id
+        - issueId
+        - changes
+        - updatedBy
+        - updatedAt
+    RevisionsList:
+      type: object
+      properties:
+        revisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Revision'
+    ComparisonResult:
+      type: object
+      properties:
+        before:
+          type: object
+          description: State of the issue before the changes
+        after:
+          type: object
+          description: State of the issue after the changes
+        changes:
+          type: object
+          description: Differences between the two revisions
+        revisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Revision'
+          description: List of revisions between the two points
+      required:
+        - before
+        - after
+        - changes
+        - revisions
+    DiscoveryResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A welcome message or description of the API.
+        endpoints:
+          type: array
+          items:
+            type: string
+          description: List of available API endpoints.
+      required:
+        - message
+    HealthResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Health status of the API.
+      required:
+        - message
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - BearerAuth: []

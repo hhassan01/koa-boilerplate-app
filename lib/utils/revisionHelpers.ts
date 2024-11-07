@@ -1,4 +1,5 @@
 import { WhereOptions, Order } from "sequelize";
+
 import Revision from "../models/revision";
 
 interface IssueState {

@@ -10,11 +10,6 @@ import {
   getStateAtRevision,
 } from "../utils/revisionHelpers";
 
-interface IssueState {
-  title?: string;
-  description?: string;
-}
-
 const RevisionsHandler = {
   getRevisions: handleRequest(async (context: Context): Promise<void> => {
     const revisions = await Revision.findAll({
