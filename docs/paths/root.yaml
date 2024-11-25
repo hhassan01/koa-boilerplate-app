@@ -1,0 +1,12 @@
+get:
+  summary: API Discovery Endpoint
+  description: Provides basic information about the API and available endpoints.
+  tags:
+    - General
+  responses:
+    '200':
+      description: API discovery information retrieved successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/DiscoveryResponse.yaml'

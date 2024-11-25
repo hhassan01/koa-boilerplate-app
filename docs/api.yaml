@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Issue Tracker API
+  version: 1.0.0
+  description: API documentation for the Issue Tracker
+servers:
+  - url: http://localhost:8080
+paths:
+  /:
+    $ref: './paths/root.yaml'
+  /health:
+    $ref: './paths/health.yaml'
+  /auth/token:
+    $ref: './paths/auth/token.yaml'
+  /issues:
+    $ref: './paths/issues.yaml'
+  /issues/{id}:
+    $ref: './paths/issues/{id}.yaml'
+  /issues/{issueId}/revisions:
+    $ref: './paths/issues/{issueId}/revisions.yaml'
+  /issues/{issueId}/revisions/compare/{revisionAId}/{revisionBId}:
+    $ref: './paths/issues/{issueId}/compareRevisions.yaml'
+components:
+  schemas:
+    Issue:
+      $ref: './schemas/Issue/Issue.yaml'
+    NewIssue:
+      $ref: './schemas/Issue/NewIssue.yaml'
+    UpdateIssue:
+      $ref: './schemas/Issue/UpdateIssue.yaml'
+    ErrorResponse:
+      $ref: './schemas/ErrorResponse.yaml'
+    AuthTokenRequest:
+      $ref: './schemas/Auth/AuthTokenRequest.yaml'
+    AuthTokenResponse:
+      $ref: './schemas/Auth/AuthTokenResponse.yaml'
+    Revision:
+      $ref: './schemas/Revision/Revision.yaml'
+    RevisionsList:
+      $ref: './schemas/Revision/RevisionsList.yaml'
+    ComparisonResult:
+      $ref: './schemas/Revision/ComparisonResult.yaml'
+    DiscoveryResponse:
+      $ref: './schemas/DiscoveryResponse.yaml'
+    HealthResponse:
+      $ref: './schemas/HealthResponse.yaml'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - BearerAuth: []

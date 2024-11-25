@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: integer
+    description: Issue ID
+  title:
+    type: string
+    description: Title of the issue
+  description:
+    type: string
+    description: Detailed description of the issue
+  createdBy:
+    type: string
+    description: Email of the user who created the issue
+  updatedBy:
+    type: string
+    description: Email of the user who last updated the issue
+  createdAt:
+    type: string
+    format: date-time
+    description: Timestamp when the issue was created
+  updatedAt:
+    type: string
+    format: date-time
+    description: Timestamp when the issue was last updated
+required:
+  - id
+  - title
+  - description
+  - createdBy
+  - createdAt

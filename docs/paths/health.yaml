@@ -1,0 +1,12 @@
+get:
+  summary: Health Check Endpoint
+  description: Checks the health status of the API.
+  tags:
+    - General
+  responses:
+    '200':
+      description: API is healthy.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/HealthResponse.yaml'

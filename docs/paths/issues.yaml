@@ -1,0 +1,95 @@
+get:
+  summary: Retrieve all issues
+  description: Retrieves a list of issues with pagination support.
+  tags:
+    - Issues
+  parameters:
+    - in: query
+      name: page
+      schema:
+        type: integer
+        default: 1
+      description: Page number for pagination
+    - in: query
+      name: pageSize
+      schema:
+        type: integer
+        default: 10
+      description: Number of items per page
+  security:
+    - BearerAuth: []
+  responses:
+    '200':
+      description: A list of issues with pagination details
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              issues:
+                type: array
+                items:
+                  $ref: '../schemas/Issue/Issue.yaml'
+              pagination:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Total number of issues
+                  page:
+                    type: integer
+                    description: Current page number
+                  pageSize:
+                    type: integer
+                    description: Number of items per page
+                  totalPages:
+                    type: integer
+                    description: Total number of pages
+    '400':
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
+    '401':
+      description: Unauthorized - Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
+
+post:
+  summary: Create a new issue
+  description: Creates a new issue.
+  tags:
+    - Issues
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/Issue/NewIssue.yaml'
+        example:
+          title: "Sample Issue"
+          description: "This is a sample issue."
+  responses:
+    '201':
+      description: Issue created successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Issue/Issue.yaml'
+    '400':
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
+    '401':
+      description: Unauthorized - Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'

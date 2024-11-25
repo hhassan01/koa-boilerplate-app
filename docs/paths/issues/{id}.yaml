@@ -1,0 +1,76 @@
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: integer
+    description: ID of the issue
+
+get:
+  summary: Retrieve a specific issue
+  description: Retrieves details of an issue by ID.
+  tags:
+    - Issues
+  security:
+    - BearerAuth: []
+  responses:
+    '200':
+      description: Issue details retrieved successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/Issue/Issue.yaml'
+    '404':
+      description: Issue not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/ErrorResponse.yaml'
+    '401':
+      description: Unauthorized - Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/ErrorResponse.yaml'
+
+put:
+  summary: Update an existing issue
+  description: Updates details of an existing issue.
+  tags:
+    - Issues
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/Issue/UpdateIssue.yaml'
+        example:
+          title: "Updated Issue Title"
+          description: "Updated description."
+  responses:
+    '200':
+      description: Issue updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/Issue/Issue.yaml'
+    '400':
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/ErrorResponse.yaml'
+    '404':
+      description: Issue not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/ErrorResponse.yaml'
+    '401':
+      description: Unauthorized - Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/ErrorResponse.yaml'
