@@ -1,42 +1,46 @@
-
-# Testlio coding assignment (backend)
+# Issue Management REST API
 
 ## Description
 
-All projects in Testlio contain issues. Issues describe problems and bugs, found by testers in client applications. Your job is to create a simple REST API to manage issue entities.
+This project is a fully functional REST API designed to manage issue entities within projects. Issues are critical for tracking problems and bugs in applications, allowing developers and testers to collaborate effectively. The API provides endpoints for creating, listing, updating, and tracking revisions of issues while ensuring robust authentication and audit logging.
 
-An initial project with some example code has been set up for you, but you're not limited to these tools & structure, feel free to make changes if you need to.
+This project was built with a focus on scalability, security, and adherence to REST API best practices.
 
-## Development environment
+## Features
 
-The repo contains a simplistic Docker Compose setup to make your life easier, but you are free to modify it or use a different toolset based on your preferences.
+- **Create, Read, Update Issues**: Core functionality to manage issues with validations and error handling.
+- **Issue Revisions**: Every modification to an issue is tracked as a revision, including details about what was changed, by whom, and when.
+- **Authentication**: Ensures secure access to the API using JWT-based authentication.
+- **Change Tracking**: Stores author details (`created_by` and `updated_by`) for all database modifications.
+- **Revision Comparison**: Enables comparison between two revisions of an issue, highlighting changes and providing a summary of differences.
+- **Dockerized Setup**: Simplified local development and deployment with Docker Compose.
 
-1. Install Docker and Docker Compose on your machine.
+## Development Environment
 
-2. Build and run the Docker containers using the following command:
-    ```bash
-    docker-compose up --build -d
-    ```
+This project is containerized for ease of setup and portability. Follow the steps below to run the project locally:
 
-3. The API will be available at http://localhost:8080.
+1. **Install Docker**: Ensure Docker and Docker Compose are installed on your machine.
 
-4. You can connect to the database from any MySQL client. It's available at localhost:3307 with the root user & the password you find in `.env`.
+2. **Run the Application**:
+   ```bash
+   docker-compose up --build -d
+   ```
 
-## Preparations and workflow
+3. **Access the API**:
+   - The REST API is available at: `http://localhost:8080`.
+   - The database is accessible locally at `localhost:3307` using any MySQL client. Use the credentials provided in the `.env` file.
 
-* Create your own Git branch in the format `solution/{firstname}-{lastname}`, e.g. `solution/peter-griffin`.
-* We encourage you to commit often, but feel free to use whatever approach works best for you.
-* Currently the project repository has no remote set up, please keep it that way, don't publish or share it.
-* Keep this README file for the instructions, and create a new `SUBMISSION.md` file to document any important decisions, trade-offs or technical details that will help us understand you solution.
-* At the end, compress the repository to a .zip file and upload it to the link we provided in the email. Make sure the .zip file contains hidden files & directories (e.g. `.git`, `.env`) but doesn't contain the `node_modules` folder.
+## Technical Overview
 
-## Currently implemented
+- **Backend Framework**: [Node.js](https://nodejs.org) with [Koa](http://koajs.com/)
+- **Database**: MySQL
+- **ORM**: [Sequelize](http://docs.sequelizejs.com/)
+- **Authentication**: JWT
+- **Containerization**: Docker Compose
 
-* Basics of the REST API using [Node.js](https://nodejs.org) and [koa](http://koajs.com/)
-* MySQL database with a table for issues
-* [Sequelize](http://docs.sequelizejs.com/) model for issues
+### Example Issue Format
 
-A sample issue to illustrate the issue item structure:
+Each issue is stored with the following structure:
 
 ```json
 {
@@ -44,83 +48,108 @@ A sample issue to illustrate the issue item structure:
     "title": "Bug in issue-service",
     "description": "Ah snap :("
 }
-```  
+```
 
-## Your tasks
+### Revision Format
 
-### Task 1: Implement an endpoint that creates a new issue
-
-### Task 2: Implement an endpoint that lists all stored issues
-
-### Task 3: Implement an endpoint that modifies an issue
-
-### Task 4: Implement issue revisions
-
-Issues being one of the central models of Testlio, it is important to track the changes made to them. Every time a change is made to an issue, we want to track what exactly was changed, by whom and when.
-
-Each change is a **revision**, containing the issue current state and the changes made.
-
-_For example:_
+Revisions track the state of an issue after any change:
 
 ```json
 {
-"issue": {
-    "title": "Bug in issue-service",
-    "description": "It does not generate revisions"
-},
-"changes": {
-    "description": "It does not generate revisions"
-},
-"updatedAt": "2024-03-29T15:40:42.000Z"
+    "issue": {
+        "title": "Bug in issue-service",
+        "description": "It does not generate revisions"
+    },
+    "changes": {
+        "description": "It does not generate revisions"
+    },
+    "updatedAt": "2024-03-29T15:40:42.000Z"
 }
 ```
 
-Requirements:
+## Endpoints
 
-* Store issue revision when creating a new issue
-* Store issue revision when updating an issue
-* Implement a new endpoint that returns all revisions of a particular issue  
+### Core Functionality
+- **Create Issue**: Create a new issue in the system.
+- **List Issues**: Retrieve all stored issues with pagination.
+- **Update Issue**: Modify an existing issue, storing the changes as a revision.
 
-### Task 5: Implement authentication
+### Revisions
+- **Create Revision**: Automatically logs revisions when creating or updating an issue.
+- **List Revisions**: Retrieve all revisions of a specific issue.
+- **Compare Revisions**: Compare two revisions of an issue and summarize the differences.
 
-* Require a valid JWT token to be present for all requests (except for the discovery and health endpoints)
-* Every time a change is made to the DB, store the change author's email address (i.e. `created_by`, `updated_by`).  
+### Authentication
+- **Secure Access**: All endpoints require a valid JWT token, except for health, discovery and auth endpoints.
 
-### Task 6: Before and after comparison
+## Highlights
 
-Create an endpoint that takes two revisions of a particular issue and returns the difference between the two.
+- **Validation**: Comprehensive input validation ensures data consistency.
+- **Error Handling**: Well-structured error messages and codes for client and server-side issues.
+- **Audit Logging**: Tracks who made changes and when for transparency and accountability.
+- **Revision Comparison**: Provides detailed insights into how issues evolve over time.
 
-The response object should contain the following data pieces:
-* `before`: the issue's content at revision A
-* `after`: the issue's content at revision B
-* `changes`: summary of the differences (i.e. listing all properties that have changed and their values)
-* `revisions`: the full trail of revisions between version A and B
+## Getting Started
 
-By default the comparison can work from older to newer revisions, but for bonus points you can implement comparisons from newer to older revisions as well.
-  
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd <repository-name>
+   ```
 
-## FAQ
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-#### Should I take the tasks in order?
+3. Configure environment variables in the `.env` file.
 
-Yes, we expect you to start from the first task and progress from there.
+4. Run the application:
+   ```bash
+   npm run start
+   ```
 
-#### How much time should I spend on the task?
+### Database Migrations
 
-In our experience 4-6 hours is usually enough for a sufficient solution, but it depends on your availability and previous experience with the tools.
+To manage database migrations, two scripts are provided:
 
-#### What do you look for in the solution?
+- **Run Migrations:**
 
-Ideally we would like to see a working solution. The solution does not have to be perfect, so first make it work, then make it pretty.
+  Apply all pending migrations.
 
-We will look for REST API development best practices, like route naming, validations, error handling, pagination, ensuring data consistency and so on.
+  ```bash
+  npm run migrate
+  ```
 
-During the technical interview you can elaborate on your further design & architecture ideas, and we will also discuss additional aspects needed to take the service to production and operate it with high reliability and availability.
+- **Undo Migrations:**
 
-#### Bonus points
+  Roll back migrations.
 
-If you have extra time and energy after meeting our core expectations, here are some ideas to impress us:
-* we would really love to see your code covered by tests
-* you can generate documentation for the API
-* you can define migrations for the data schema changes
-* or you can even convert the codebase to TypeScript :)
+  ```bash
+  npm run migrate:undo
+  ```
+
+### API Documentation
+
+To bundle the API documentation, which is located in `docs/api.yaml`, into a single file:
+
+- **Bundle API Documentation:**
+
+  This will generate `bundled-api.yaml` in the `docs` folder.
+
+  ```bash
+  npm run bundle-spec
+  ```
+
+  You can then checkout the API documentation at http://localhost:8080/docs.
+  > NOTE: After making changes in the docs/**, rebuild using the above command 
+  > and restart the server for changes to take effect
+
+
+### Running Tests
+
+To run the test suite, use:
+
+```bash
+npm run test
+```
